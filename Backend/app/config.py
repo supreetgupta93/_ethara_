@@ -17,25 +17,24 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     
     # CORS
-    CORS_ORIGINS: list[str] = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:8000",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-        "http://127.0.0.1:8000",
-    ]
+    CORS_ORIGINS: list[str] = ["*"]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def parse_cors_origins(cls, value):
         if isinstance(value, str):
+            value = value.strip()
+            if value == "*":
+                return ["*"]
             try:
-                return json.loads(value)
+                parsed = json.loads(value)
+                if isinstance(parsed, str):
+                    return [parsed]
+                return parsed
             except ValueError:
                 return [origin.strip() for origin in value.split(",") if origin.strip()]
+        if value is None:
+            return ["*"]
         return value
     
     class Config:
