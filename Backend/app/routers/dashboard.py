@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from pydantic import BaseModel
+from typing import List
 from app.database import get_db
 from app.models import Product, Customer, Order
+from app.schemas.product import ProductResponse
 
 router = APIRouter(
     prefix="/dashboard",
@@ -16,7 +18,7 @@ class DashboardResponse(BaseModel):
     total_products: int
     total_customers: int
     total_orders: int
-    low_stock_products: int
+    low_stock_products: List[ProductResponse]
 
     model_config = {
         "from_attributes": True,
@@ -38,15 +40,15 @@ def get_dashboard(
     - **total_products**: Total number of products in inventory
     - **total_customers**: Total number of customers
     - **total_orders**: Total number of orders
-    - **low_stock_products**: Number of products with stock < 10
+    - **low_stock_products**: List of products with stock < 10
     """
     total_products = db.query(func.count(Product.id)).scalar() or 0
     total_customers = db.query(func.count(Customer.id)).scalar() or 0
     total_orders = db.query(func.count(Order.id)).scalar() or 0
     low_stock_products = (
-        db.query(func.count(Product.id))
+        db.query(Product)
         .filter(Product.stock_quantity < 10)
-        .scalar() or 0
+        .all()
     )
     
     return DashboardResponse(
