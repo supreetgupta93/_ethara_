@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log*
+package-lock.json
+dist
+.vscode
+.env
+.env.local
+.env.*.local
+.git

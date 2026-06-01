@@ -1,0 +1,15 @@
+# Ignore sensitive and local files in root docker contexts
+**/__pycache__
+**/*.py[cod]
+.env
+.env.local
+.env.*.local
+venv
+ENV
+env
+node_modules
+dist
+.git
+Dockerfile
+.dockerignore
+docker-compose.yml

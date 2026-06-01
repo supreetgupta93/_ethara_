@@ -1,0 +1,15 @@
+# Backend ignore rules
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+ENV/
+env/
+.pytest_cache/
+.idea/
+.vscode/
+.env
+.env.local
+.env.*.local
